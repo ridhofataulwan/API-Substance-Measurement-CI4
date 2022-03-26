@@ -34,11 +34,6 @@ class ExperimentsModel extends Model
 
     public function getExperimentsByUser($users_id)
     {
-        // return $this->db
-        //     ->table($this->table)->join('users', 'experiments.experiments_user=users.users_id')
-        //     ->where(['users_id' => $users_id])
-        //     ->get()
-        //     ->getResultArray();
         return $this->db
             ->table($this->table)->join('users', 'experiments.experiments_user=users.users_id')
             ->where(['users_id' => $users_id])
@@ -51,5 +46,16 @@ class ExperimentsModel extends Model
         return $this->db
             ->table($this->table)
             ->delete([$this->primaryKey => $experiments_id]);
+    }
+
+    // Dipake buat mencari state experiments
+    public function getExperimentsScalesByState($experiments_state, $scales_state, $scales_device)
+    {
+        return $this
+            ->table($this->table)->join('scales', 'experiments.experiments_scales=scales.scales_id')
+            ->where(['experiments_state' => 'doing'])
+            ->where(['scales_state' => 'on'])
+            ->where(['scales_device' => 'inideviceid'])
+            ->first();
     }
 }
