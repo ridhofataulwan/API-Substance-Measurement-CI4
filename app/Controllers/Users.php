@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\UsersModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class Users extends ResourceController
@@ -11,68 +12,71 @@ class Users extends ResourceController
      *
      * @return mixed
      */
-    public function index()
+    public function __construct()
     {
-        //
+        helper(['form', 'url', 'auth']);
+        $this->UsersModel = new UsersModel();
+    }
+    public function getUsersAll()
+    {
+        $data = $this->UsersModel->findAll();
+        $response = [
+            'countOfUsers'   => count($data),
+            'users' => $data
+        ];
+        return $this->respond($response, 200);
+    }
+    public function getUserByID($users_id)
+    {
+        $data = $this->UsersModel->getUserByID($users_id);
+        return $this->respond($data, 200);
     }
 
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
-    public function show($id = null)
+    public function insertUser()
     {
-        //
+        $data = [
+            'users_name' => $this->request->getPost('users_name'),
+        ];
+        $this->UsersModel->insert($data);
+        $response = [
+            'status'   => 201,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Data Saved'
+            ]
+        ];
+        return $this->respondCreated($response, 201);
     }
 
-    /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
+    public function updateUserByID()
     {
-        //
+        $putData = $this->request->getRawInput();
+        $data = [
+            'users_name' => $putData['users_name'],
+            //apakah update jika ada field yang tidak dibuat, akan tidak error di database?
+        ];
+        // Update Users by ID 
+        $this->UsersModel->update($putData['users_id'], $data); //ambil data id ne dari hidden form pas melakukan update
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Users ' . $putData['users_id'] . ' is updated',
+            ]
+        ];
+        return $this->respond($response);
     }
 
-    /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
-     */
-    public function create()
+    public function deleteUserByID($users_id)
     {
-        //
-    }
-
-    /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-        //
-    }
-
-    /**
-     * Add or update a model resource, from "posted" properties
-     *
-     * @return mixed
-     */
-    public function update($id = null)
-    {
-        //
-    }
-
-    /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
-     */
-    public function delete($id = null)
-    {
-        //
+        $this->UsersModel->deleteUserByID($users_id);
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Users ' . $users_id . ' is deleted',
+            ]
+        ];
+        return $this->respond($response);
     }
 }
