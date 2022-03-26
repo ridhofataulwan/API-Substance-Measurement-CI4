@@ -2,6 +2,8 @@
 
 namespace App\Controllers;
 
+use App\Models\ExperimentsModel;
+use App\Models\RecordsModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class Records extends ResourceController
@@ -11,68 +13,35 @@ class Records extends ResourceController
      *
      * @return mixed
      */
-    public function index()
+    public function __construct()
     {
-        //
+        helper(['form', 'url', 'auth']);
+        $this->RecordsModel = new RecordsModel();
+        $this->ExperimentsModel = new ExperimentsModel();
     }
 
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
-    public function show($id = null)
+    public function getRecordsByExperimentsID($experiments_id)
     {
-        //
+        $data = $this->RecordsModel->getRecordsByExperimentsID($experiments_id);
+        return $this->respond($data, 200);
     }
 
-    /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
+    public function insertRecord($device, $value, $timestamp)
     {
-        //
-    }
-
-    /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
-    {
-        //
-    }
-
-    /**
-     * Add or update a model resource, from "posted" properties
-     *
-     * @return mixed
-     */
-    public function update($id = null)
-    {
-        //
-    }
-
-    /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
-     */
-    public function delete($id = null)
-    {
-        //
+        $get = $this->ExperimentsModel->getExperimentsScalesByState('doing', 'on', $device);
+        $data = [
+            'records_value' => $value,
+            'records_timestamp' => $timestamp,
+            'records_experiments' => $get['experiments_id'],
+        ];
+        $this->RecordsModel->insert($data);
+        $response = [
+            'status'   => 201,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Record succsesful created',
+            ]
+        ];
+        return $this->respondCreated($response, 201);
     }
 }
