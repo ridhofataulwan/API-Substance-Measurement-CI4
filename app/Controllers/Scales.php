@@ -76,7 +76,7 @@ class Scales extends ResourceController
                 'success' => 'Scales ' . $putData['scales_id'] . ' is updated',
             ]
         ];
-        return $this->respond($response, 204);
+        return $this->respond($response);
     }
     public function setScaleStateOnByID($scales_id)
     {
@@ -94,7 +94,7 @@ class Scales extends ResourceController
                 'scales_state' => $data['scales_state'],
             ]
         ];
-        return $this->respond($response, 204);
+        return $this->respond($response);
     }
     public function setScaleStateOffByID($scales_id)
     {
@@ -112,7 +112,7 @@ class Scales extends ResourceController
                 'scales_state' => $data['scales_state'],
             ]
         ];
-        return $this->respond($response, 204);
+        return $this->respond($response);
     }
     public function deleteScaleByID($scales_id)
     {
@@ -124,6 +124,6 @@ class Scales extends ResourceController
                 'success' => 'Scale ' . $scales_id . ' is deleted',
             ]
         ];
-        return $this->respond($response, 204);
+        return $this->respond($response);
     }
 }

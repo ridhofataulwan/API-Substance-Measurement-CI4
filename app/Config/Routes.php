@@ -46,11 +46,11 @@ $routes->get('/api/scales/(:num)', 'Scales::getScaleByID/$1');
 $routes->delete('/api/scales/(:num)', 'Scales::deleteScaleByID/$1');
 
 //Users
-$routes->get('/api/users/', 'Users::getUserAll');
+$routes->get('/api/users/', 'Users::getUsersAll');
 $routes->post('/api/users/', 'Users::insertUser');
 $routes->put('/api/users/', 'Users::updateUserByID');
-$routes->get('/api/users/:id', 'Users::getUserByID');
-$routes->delete('/api/users/:id', 'Users::deleteUserByID');
+$routes->get('/api/users/(:num)', 'Users::getUserByID/$1');
+$routes->delete('/api/users/(:num)', 'Users::deleteUserByID/$1');
 
 //Experiments 
 $routes->get('/api/experiments/', 'Experiments::getExperimentsAll');
