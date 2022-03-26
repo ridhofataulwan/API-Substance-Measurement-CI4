@@ -55,16 +55,18 @@ $routes->delete('/api/users/(:num)', 'Users::deleteUserByID/$1');
 //Experiments 
 $routes->get('/api/experiments/', 'Experiments::getExperimentsAll');
 $routes->post('/api/experiments/', 'Experiments::insertExperiment');
-$routes->put('/api/experiments/', 'Experiments::updateExperimentsByID');
-$routes->put('/api/experiments/doing/:id', 'Experiments::setExperimentsStateDoingByID');
-$routes->put('/api/experiments/finished/:id', 'Experiments::setExperimentsStateFinishedByID');
-$routes->get('/api/experiments/user/:id', 'Experiments::getExperimentsByUser');
-$routes->get('/api/experiments/:id', 'Experiments::getExperimentsByID');
-$routes->delete('/api/experiments/:id', 'Experiments::deleteExperimentByID');
+$routes->put('/api/experiments/', 'Experiments::updateExperimentByID');
+$routes->put('/api/experiments/doing/(:num)', 'Experiments::setExperimentsStateDoingByID/$1');
+$routes->put('/api/experiments/finished/(:num)', 'Experiments::setExperimentsStateFinishedByID/$1');
+$routes->get('/api/experiments/user/(:num)', 'Experiments::getExperimentsByUser/$1');
+$routes->get('/api/experiments/(:num)', 'Experiments::getExperimentByID/$1');
+$routes->delete('/api/experiments/(:num)', 'Experiments::deleteExperimentByID/$1');
 
 //Records
-$routes->get('/api/records/experiments/:id', 'Records::getRecordsByExperimentsID');
-$routes->get('/api/records/:device/:value/:timestamp', 'Records::insertRecord');
+$routes->get('/api/records/experiments/(:num)', 'Records::getRecordsByExperimentsID/$1');
+$routes->get('/api/records/(:any)/(:any)/(:any)', 'Records::insertRecord/$1/$2/$3');
+
+//Insert Record :device/:value/:timestamp
 
 /*
  * --------------------------------------------------------------------

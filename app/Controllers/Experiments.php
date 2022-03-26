@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\ExperimentsModel;
 use CodeIgniter\RESTful\ResourceController;
 
 class Experiments extends ResourceController
@@ -11,68 +12,114 @@ class Experiments extends ResourceController
      *
      * @return mixed
      */
-    public function index()
+    public function __construct()
     {
-        //
+        helper(['form', 'url', 'auth']);
+        $this->ExperimentsModel = new ExperimentsModel();
     }
 
-    /**
-     * Return the properties of a resource object
-     *
-     * @return mixed
-     */
-    public function show($id = null)
+    public function getExperimentsAll()
     {
-        //
+        $data = $this->ExperimentsModel->findAll();
+        $response = [
+            'countOfExperiments'   => count($data),
+            'experiments' => $data
+        ];
+        return $this->respond($response, 200);
     }
-
-    /**
-     * Return a new resource object, with default properties
-     *
-     * @return mixed
-     */
-    public function new()
+    public function getExperimentByID($experiments_id)
     {
-        //
+        $data = $this->ExperimentsModel->getExperimentByID($experiments_id);
+        return $this->respond($data, 200);
     }
-
-    /**
-     * Create a new resource object, from "posted" parameters
-     *
-     * @return mixed
-     */
-    public function create()
+    public function getExperimentsByUser($users_id)
     {
-        //
+        $data = $this->ExperimentsModel->getExperimentsByUser($users_id);
+        $response = [
+            'countOfExperiments'   => count($data),
+            'experiments' => $data
+        ];
+        return $this->respond($response, 200);
     }
-
-    /**
-     * Return the editable properties of a resource object
-     *
-     * @return mixed
-     */
-    public function edit($id = null)
+    public function insertExperiment()
     {
-        //
+        $data = [
+            'experiments_name' => $this->request->getPost('experiments_name'),
+            'experiments_desc' => $this->request->getPost('experiments_desc'),
+            'experiments_state' => $this->request->getPost('experiments_state'),
+            'experiments_user' => $this->request->getPost('experiments_user'),
+            'experiments_scales' => $this->request->getPost('experiments_scales'),
+        ];
+        $this->ExperimentsModel->insert($data);
+        $response = [
+            'status'   => 201,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Experiment ' . $this->request->getPost('experiments_name') . ' created'
+            ]
+        ];
+        return $this->respondCreated($response, 201);
     }
-
-    /**
-     * Add or update a model resource, from "posted" properties
-     *
-     * @return mixed
-     */
-    public function update($id = null)
+    public function updateExperimentByID()
     {
-        //
+        $putData = $this->request->getRawInput();
+        $data = [
+            'experiments_id' => $putData['experiments_id'],
+            'experiments_name' => $putData['experiments_name'],
+            'experiments_desc' => $putData['experiments_desc'],
+            'experiments_user' => $putData['experiments_user'],
+            'experiments_scales' => $putData['experiments_scales'],
+        ];
+        $this->ExperimentsModel->update($putData['experiments_id'], $data);
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Experiment ' . $putData['experiments_name'] . ' updated'
+            ]
+        ];
+        return $this->respond($response);
     }
-
-    /**
-     * Delete the designated resource object from the model
-     *
-     * @return mixed
-     */
-    public function delete($id = null)
+    public function setExperimentsStateDoingByID($experiments_id)
     {
-        //
+        $data = [
+            'experiments_state' => 'doing',
+        ];
+        $this->ExperimentsModel->update($experiments_id, $data);
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Experiment ' . $experiments_id . ' State is Doing'
+            ]
+        ];
+        return $this->respond($response);
+    }
+    public function setExperimentsStateFinishedByID($experiments_id)
+    {
+        $data = [
+            'experiments_state' => 'finished',
+        ];
+        $this->ExperimentsModel->update($experiments_id, $data);
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Experiment ' . $experiments_id . ' State is Finished'
+            ]
+        ];
+        return $this->respond($response);
+    }
+    public function deleteExperimentByID($experiments_id)
+    {
+        $this->ExperimentsModel->delete($experiments_id);
+        $response = [
+            'status'   => 204,
+            'error'    => null,
+            'messages' => [
+                'success' => 'Experiment ' . $experiments_id . ' is deleted',
+            ]
+        ];
+        return $this->respond($response);
     }
 }
