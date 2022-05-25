@@ -53,9 +53,9 @@ class ExperimentsModel extends Model
     {
         return $this
             ->table($this->table)->join('scales', 'experiments.experiments_scales=scales.scales_id')
-            ->where(['experiments_state' => 'doing'])
-            ->where(['scales_state' => 'on'])
-            ->where(['scales_device' => 'inideviceid'])
+            ->where(['experiments_state' => $experiments_state])
+            ->where(['scales_state' => $scales_state])
+            ->where(['scales_device' => $scales_device])
             ->first();
     }
 }
