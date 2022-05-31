@@ -19,7 +19,7 @@ class RecordsModel extends Model
     {
         return $this->db
             ->table($this->table)
-            ->where([$this->primaryKey => $experiments_id])
+            ->where(['records_experiments' => $experiments_id])
             ->get()
             ->getResultArray();
     }
