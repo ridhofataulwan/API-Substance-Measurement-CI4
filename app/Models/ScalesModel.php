@@ -33,7 +33,7 @@ class ScalesModel extends Model
             ->table($this->table)
             ->where(['scales_' . $custom_param => $custom_value])
             ->get()
-            ->getResultArray()[0];
+            ->getResultArray();
     }
 
     public function deleteScaleByID($scales_id)
