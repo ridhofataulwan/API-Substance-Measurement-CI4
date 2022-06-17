@@ -20,7 +20,7 @@ class Experiments extends ResourceController
 
     public function getExperimentsAll()
     {
-        $data = $this->ExperimentsModel->findAll();
+        $data = $this->ExperimentsModel->getExperimentsAll();
         $response = [
             'countOfExperiments'   => count($data),
             'experiments' => $data
